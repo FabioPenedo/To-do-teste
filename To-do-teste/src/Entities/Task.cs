@@ -4,32 +4,61 @@ namespace To_do_teste.src.Entities
 {
     public class Task
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
-        public string Title { get; set; } = string.Empty;
+        [Required]
+        [MaxLength(100)]
+        public string Title { get; private set; } = null!;
 
-        public string Description { get; set; } = string.Empty;
+        [MaxLength(500)]
+        public string Description { get; private set; } = null!;
 
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted { get; private set; }
 
-        public string Category { get; set; } = string.Empty;
+        [Required]
+        [MaxLength(50)]
+        public string Category { get; private set; } = null!;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; } = null;
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
 
-        public int UserId { get; set; }
-        public User User { get; set; } = null!;
+        [Required]
+        public int UserId { get; private set; }
+        public User User { get; private set; } = null!;
 
+        // Construtor para EF
         protected Task() { }
 
-        public Task(string title, string description, string category, int userId, bool isCompleted)
+        public Task(
+            string title,
+            string description,
+            bool isCompleted,
+            string category,
+            int userId)
         {
             Title = title;
             Description = description;
+            IsCompleted = isCompleted;
             Category = category;
             UserId = userId;
-            IsCompleted = isCompleted;
+
+            CreatedAt = DateTime.UtcNow;
         }
 
+        public Task(
+            int id,
+            string title,
+            string description,
+            bool isCompleted,
+            string category)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
+            IsCompleted = isCompleted;
+            Category = category;
+
+            CreatedAt = DateTime.UtcNow;
+        }
     }
 }

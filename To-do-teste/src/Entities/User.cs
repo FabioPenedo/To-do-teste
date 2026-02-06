@@ -2,24 +2,17 @@
 
 namespace To_do_teste.src.Entities
 {
-    public class User
+    public class User(string userName, string passwordHash)
     {
         public int Id { get; set; }
 
         [Required]
-        public string UserName { get; set; } = string.Empty;
+        [MaxLength(50)]
+        public string UserName { get; set; } = userName;
 
         [Required]
-        public string PasswordHash { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = passwordHash;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        protected User() { }
-
-        public User(string userName, string passwordHash)
-        {
-            UserName = userName;
-            PasswordHash = passwordHash;
-        }
     }
 }

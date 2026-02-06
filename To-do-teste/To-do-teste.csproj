@@ -7,6 +7,7 @@
     <RootNamespace>To_do_teste</RootNamespace>
     <UserSecretsId>0c7ba2cf-1025-44b4-acfd-a0a01a5c8fb3</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,7 +11,10 @@ using System.Text;
 using System.Text.Json.Serialization;
 using To_do_teste.src.Data;
 using To_do_teste.src.DTOs;
+using To_do_teste.src.Interfaces;
 using To_do_teste.src.Middlewares;
+using To_do_teste.src.Repositories;
+using To_do_teste.src.Services;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -20,12 +23,12 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("System", LogEventLevel.Warning)
     .Enrich.FromLogContext()
     .WriteTo.Console(
-        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level:u3}] [User:{UserId}] [Task:{TaskId}] [ReqId:{RequestId}] {Message:lj}{NewLine}{Exception}")
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level:u3}] [User:{UserId}] [ReqId:{RequestId}] {Message:lj}{NewLine}{Exception}")
     .WriteTo.File(
         path: "logs/todo-teste-.log",
         rollingInterval: RollingInterval.Day,
         retainedFileCountLimit: 30,
-        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level:u3}] [User:{UserId}] [Task:{TaskId}] [ReqId:{RequestId}] {Message:lj}{NewLine}{Exception}")
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level:u3}] [User:{UserId}] [ReqId:{RequestId}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 
 try
@@ -105,6 +108,13 @@ try
     // Repositórios e Services
     // ----------------------
 
+    builder.Services.AddScoped<ITokenService, TokenService>();
+    builder.Services.AddScoped<AuthService>();
+    builder.Services.AddScoped<TaskService>();
+    builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
 
     /// ----------------------
     // Controllers
@@ -150,6 +160,12 @@ try
 
     var app = builder.Build();
 
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
+    }
+
     app.UseHttpsRedirection();
 
     // ----------------------
@@ -175,6 +191,12 @@ try
     app.UseCookiePolicy();
 
     app.UseAuthentication();
+
+    app.UseMiddleware<ToDoMiddleware>();
+
+    app.UseMiddleware<JwtRefreshMiddleware>();
+
+    app.UseMiddleware<LoggingMiddleware>();
 
     app.ConfigureExceptionHandler(app.Logger);
 
