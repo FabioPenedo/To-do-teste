@@ -1,5 +1,5 @@
 ﻿using Serilog.Context;
-using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using To_do_teste.src.Context;
 
 namespace To_do_teste.src.Middlewares
@@ -15,7 +15,7 @@ namespace To_do_teste.src.Middlewares
 
             if (context.User.Identity?.IsAuthenticated == true)
             {
-                var userIdClaim = context.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (int.TryParse(userIdClaim, out var parsedUserId))
                 {
