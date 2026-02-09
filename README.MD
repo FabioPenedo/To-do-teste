@@ -60,7 +60,7 @@ docker-compose up -d
 ou 
 
 ```bash
-iniciando start do pelo visual studio
+iniciando pelo start do visual studio
 ```
 
 Isso irá:
