@@ -59,13 +59,13 @@ namespace To_do_teste.src.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        async public Task<TaskResponse?> GetByCategoryAsync(string category)
+        async public Task<IEnumerable<TaskResponse>> GetByCategoryAsync(string category)
         {
             return await _db.Tasks
                 .Where(t => t.Category.StartsWith(category))
                 .Select(t => new TaskResponse(t.Id, t.Title, t.Description, t.IsCompleted, t.Category, t.CreatedAt, t.User.UserName))
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .ToListAsync();
         }
 
         async public Task DeleteAsync(int id)

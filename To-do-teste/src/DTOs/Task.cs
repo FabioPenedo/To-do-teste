@@ -27,6 +27,7 @@
 
     public record TaskCreatedResponse(
         int Id,
-        string Title
+        string Title,
+        string Category
     );
 }

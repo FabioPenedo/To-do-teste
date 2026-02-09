@@ -1,4 +1,5 @@
-﻿using To_do_teste.src.DTOs;
+﻿using System.Threading.Tasks;
+using To_do_teste.src.DTOs;
 using To_do_teste.src.Entities;
 using To_do_teste.src.Exceptions;
 using To_do_teste.src.Interfaces;
@@ -22,7 +23,7 @@ namespace To_do_teste.src.Services
 
             _logger.TaskCreated(createdTask.Title);
 
-            return new TaskCreatedResponse(createdTask.Id, createdTask.Title);
+            return new TaskCreatedResponse(createdTask.Id, createdTask.Title, createdTask.Category);
         }
 
         public async Task<IEnumerable<TaskResponse>> GetAllTasksAsync()
@@ -72,20 +73,20 @@ namespace To_do_teste.src.Services
             );
         }
 
-        public async Task<TaskResponse?> GetTaskByCategoryAsync(string category)
+        public async Task<IEnumerable<TaskResponse>> GetTaskByCategoryAsync(string category)
         {
-            var task = await _taskRepository.GetByCategoryAsync(category)
+            var tasks = await _taskRepository.GetByCategoryAsync(category)
                 ?? throw new NotFoundException($"Task com categoria {category} não encontrado");
 
-            return new TaskResponse(
-                task.Id,
-                task.Title,
-                task.Description,
-                task.IsCompleted,
-                task.Category,
-                task.CreatedAt,
-                task.UserName
-            );
+            return tasks.Select(t => new TaskResponse(
+                t.Id,
+                t.Title,
+                t.Description,
+                t.IsCompleted,
+                t.Category,
+                t.CreatedAt,
+                t.UserName
+            ));
         }
 
         public async Task<TaskResponse?> UpdateTaskAsync(int id, UpdateTaskRequest updateRequest)

@@ -9,7 +9,7 @@ namespace To_do_teste.src.Interfaces
         Task<IEnumerable<TaskResponse>> GetAllTasksAssync();
         Task<TaskResponse?> GetByIdAsync(int id);
         Task<TaskResponse?> GetByUserAsync(string userName);
-        Task<TaskResponse?> GetByCategoryAsync(string category);
+        Task<IEnumerable<TaskResponse>> GetByCategoryAsync(string category);
         Task<TaskTodo> AddAsync(TaskTodo task);
         Task<TaskTodo> UpdateAsync(TaskTodo task);
         Task DeleteAsync(int id);

@@ -50,9 +50,9 @@ namespace To_do_teste.src.Controllers
         [HttpGet("category/{category}")]
         public async Task<ActionResult> GetTaskByCategory(string category)
         {
-            var task = await _taskService.GetTaskByCategoryAsync(category);
+            var tasks = await _taskService.GetTaskByCategoryAsync(category);
 
-            return Ok(ApiResponse<TaskResponse?>.Ok(task, "Categoria filtrada com sucesso"));
+            return Ok(ApiResponse<IEnumerable<TaskResponse>>.Ok(tasks, "Categoria filtrada com sucesso"));
         }
 
         [HttpPut("{id}")]
